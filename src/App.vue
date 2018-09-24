@@ -1,14 +1,23 @@
 <template>
   <div id="app" v-cloak>
-    <div class="container" v-if="$store.state.user && $store.state.userLoaded === true">
+    <div class="container" 
+      v-if="$store.state.user &&
+        $store.state.userLoaded === true">
       <button class="btn"
         @click="signOut">
         log out
       </button>
-      <search-bar @searchSubmit="showAddWordModal = true"></search-bar>
-      <word-list :loaded="$store.state.isWordsLoaded" :words="$store.state.words" ></word-list>
+      <search-bar 
+        v-model="searchWord" 
+        @searchSubmit="showAddWordModal = true">
+      </search-bar>
+      <word-list 
+        :loaded="$store.state.isWordsLoaded" 
+        :words="words" ></word-list>
     </div>
-    <div class="container" v-if="$store.state.user === null && $store.state.userLoaded === false">
+    <div class="container" 
+      v-if="$store.state.user === null && 
+        $store.state.userLoaded === false">
       <sign-in @signIn="signIn"></sign-in>
     </div>
     <base-modal 
@@ -47,6 +56,9 @@ export default {
     }
   },
   computed: {
+    words() {
+      return this.$store.getters.searchWords(this.searchWord);
+    }
   },
   methods: {
     signIn() {
@@ -61,9 +73,6 @@ export default {
     WordList,
     SignIn,
     AddWord,
-  },
-  created() {
-    
   },
 }
 </script>

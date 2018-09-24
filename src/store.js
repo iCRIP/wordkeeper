@@ -13,12 +13,20 @@ export default new Vuex.Store({
     user: null,
     userLoaded: true,
   },
+  getters: {
+    searchWords: (state) => (word) => {
+      const worded = state.words.filter(item => {
+        if (item.name.match(word)) {
+          return item;
+        }
+      });
+      return worded;
+    }
+  },
   mutations: {
     setWords(state, data) {
       Vue.set(state, 'words', data);
-      // state.words = data;
       Vue.set(state, 'isWordsLoaded', true);
-      // state.isWordsLoaded = true;
     },
     setUser(state, data) {
       Vue.set(state, 'user', data);
@@ -58,13 +66,13 @@ export default new Vuex.Store({
       state.userLoaded = false;
       auth.signOut();
     },
-    addWord(context, word) {
+    addWord({ state }, word) {
       const wordData = Object.assign({}, word);
-      const id = context.user.uid
+      const id = state.user.uid
       const wordsRef = db.ref('users/' + id + '/words');
 
       wordsRef.push(wordData).then(() => {
-        context.commit('updateWords')
+        state.commit('updateWords')
       });
     },
   }
