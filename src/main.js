@@ -4,10 +4,14 @@ import App from './App.vue'
 import VueFire from 'vuefire'
 import firebase from 'firebase/app';
 
+import BaseModal from '@/components/BaseModal'
+
 import 'firebase/auth';
 import 'firebase/database';
 
 Vue.use(VueFire)
+
+Vue.component('BaseModal', BaseModal);
 
 var config = {
   apiKey: "AIzaSyDnFJ2mWmm3-nUut9aFyLuNJMAXsC0kBeg",

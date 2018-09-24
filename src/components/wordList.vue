@@ -8,9 +8,9 @@
     </div>
     <word-item
       v-if="words.length"
-      v-for="(word, index) in words"
+      v-for="(word, uid) in words"
       :word="word"
-      :key="index"
+      :key="uid"
       ></word-item>
   </div>
 </template>
@@ -30,6 +30,9 @@
     },
     components: {
       WordItem
+    },
+    mounted() {
+      console.log(this.words)
     }
   }
 </script>

@@ -2,7 +2,7 @@
   <div class="search">
     <form
       class="search_form"
-      @submit="$emit('searchHandler', searchWord)">
+      @submit.prevent="$emit('searchSubmit', searchWord)">
       <input id="search"
         autofocus
         placeholder="Слово"
