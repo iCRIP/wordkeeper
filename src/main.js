@@ -4,6 +4,8 @@ import App from './App.vue'
 import VueFire from 'vuefire'
 import firebase from 'firebase/app';
 
+import store from '@/store';
+
 import BaseModal from '@/components/BaseModal'
 
 import 'firebase/auth';
@@ -31,5 +33,7 @@ export const provider = new firebase.auth.GoogleAuthProvider();
 Vue.config.productionTip = false
 
 new Vue({
+  store,
+  
   render: h => h(App)
 }).$mount('#app')

@@ -54,6 +54,8 @@
   }
 </script>
 
-<style scoped>
-
+<style>
+  .form {
+    
+  }
 </style>

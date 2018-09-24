@@ -1,14 +1,14 @@
 <template>
   <div id="app" v-cloak>
-    <div class="container" v-if="user && userLoaded === true">
+    <div class="container" v-if="$store.state.user && $store.state.userLoaded === true">
       <button class="btn"
         @click="signOut">
         log out
       </button>
       <search-bar @searchSubmit="showAddWordModal = true"></search-bar>
-      <word-list :loaded="isWordsLoaded" :words="words" ></word-list>
+      <word-list :loaded="$store.state.isWordsLoaded" :words="$store.state.words" ></word-list>
     </div>
-    <div class="container" v-if="user === null && userLoaded === false">
+    <div class="container" v-if="$store.state.user === null && $store.state.userLoaded === false">
       <sign-in @signIn="signIn"></sign-in>
     </div>
     <base-modal 
@@ -34,48 +34,26 @@ import AddWord from '@/components/addWord';
 export default {
   name: 'app',
   data() {
+    auth.onAuthStateChanged( user => {
+      if (user) {
+        this.$store.dispatch('signInStore', user)
+      } else {
+        this.$store.dispatch('signOutStore');
+      }
+    });
     return {
-      searchWord: String,
-      words: Array,
-      isWordsLoaded: false,
-      user: null,
-      userLoaded: true,
+      searchWord: '',
       showAddWordModal: false,
     }
   },
   computed: {
   },
   methods: {
-    updateWords() {
-      const id = this.user.uid;
-      this.isWordsLoaded = false;
-      return new Promise ((resolve) => {
-        db.ref('users/' + id + '/words').once('value')
-        .then((data) => {
-          console.log(data.val());
-          this.words = Object.values(data.val());
-          this.isWordsLoaded = true;
-          resolve(data.val());
-        })
-      })
-    },
-    addWord(word) {
-      const wordData = Object.assign({}, word);
-      const id = this.user.uid
-      const wordsRef = db.ref('users/' + id + '/words');
-      wordsRef.push(wordData).then(resp => {
-        this.updateWords()
-      });
-      // eslint-disable-next-line
-      console.log(wordData)
-    },
     signIn() {
       auth.signInWithPopup(provider)
     },
     signOut() {
-      this.user = null;
-      this.userLoaded = false;
-      auth.signOut();
+      this.$store.dispatch('signOutStore')
     }
   },
   components: {
@@ -85,21 +63,8 @@ export default {
     AddWord,
   },
   created() {
-    auth.onAuthStateChanged( user => {
-      if (user) {
-        this.user = user;
-        this.userLoaded = true;
-        this.updateWords();
-        return user;
-      } else {
-        this.userLoaded = false;
-        return null;
-      }
-    });
+    
   },
-  mounted() {
-    // this.updateWords();
-  }
 }
 </script>
 

@@ -31,9 +31,6 @@
     components: {
       WordItem
     },
-    mounted() {
-      console.log(this.words)
-    }
   }
 </script>
 

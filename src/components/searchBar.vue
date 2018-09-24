@@ -2,11 +2,11 @@
   <div class="search">
     <form
       class="search_form"
-      @submit.prevent="$emit('searchSubmit', searchWord)">
+      @submit.prevent="$emit('searchSubmit')">
       <input id="search"
         autofocus
         placeholder="Слово"
-        v-model="searchWord"
+        v-on:input="$emit('input', $event.target.value)"
         type="text"
         class="search_input" />
       <label
@@ -24,7 +24,6 @@
   export default {
     data () {
       return {
-        searchWord: '',
       }
     }
   }
