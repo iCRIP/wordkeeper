@@ -5,9 +5,9 @@
         @click.prevent="$emit('closeModal')">
       </div>
       <div class="modal">
-        <div class="modal_close"
+        <button class="modal_close"
           @click="$emit('closeModal')">
-        </div>
+        </button>
         <slot></slot>
       </div>
     </div>
@@ -57,15 +57,21 @@
       height: 30px;
       background-color: #ccc;
       border-radius: 50%;
+      border: none;
       z-index: 12;
       text-align: center;
-      line-height: 30px;
+      line-height: 28px;
+      transition: box-shadow .4s;
       &:before {
         content: '+';
         display: block;
         color: #fff;
         transform: rotate(45deg);
         font-size: 32px;
+      }
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 20px -2px #000;
       }
     }
   }

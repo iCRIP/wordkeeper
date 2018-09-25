@@ -1,36 +1,44 @@
 <template>
-  <div id="app" v-cloak>
-    <div class="container" 
+  <div id="app" class="app" v-cloak>
+    <div class="container"
       v-if="$store.state.user &&
         $store.state.userLoaded === true">
-      <button class="btn"
-        @click="signOut">
-        log out
-      </button>
-      <search-bar 
-        v-model="searchWord" 
+      <header class="app_header">
+        <button class="btn"
+          @click="signOut">
+          log out
+        </button>
+      </header>
+      <search-bar
+        v-model="searchWord"
         @searchSubmit="showAddWordModal = true">
       </search-bar>
-      <word-list 
-        :loaded="$store.state.isWordsLoaded" 
+      <word-list
+        :loaded="$store.state.isWordsLoaded"
         :words="words" ></word-list>
     </div>
-    <div class="container" 
-      v-if="$store.state.user === null && 
+    <div class="container"
+      v-if="$store.state.user === null &&
         $store.state.userLoaded === false">
       <sign-in @signIn="signIn"></sign-in>
     </div>
-    <base-modal 
+    <base-modal
       @closeModal="showAddWordModal = false"
       v-if="showAddWordModal">
-      <add-word @addWord="addWord">
+      <add-word :wordName="searchWord"
+        @wordAdded="wordAdded">
       </add-word>
     </base-modal>
+    <!-- <base-modal
+      @closeModal="showAddWordModal = false"
+      v-if="showAddWordModal">
+      <add-word>
+      </add-word>
+    </base-modal> -->
   </div>
 </template>
 
 <script>
-import { db } from '@/main';
 import { auth } from '@/main';
 import { provider } from '@/main';
 
@@ -51,16 +59,27 @@ export default {
       }
     });
     return {
-      searchWord: '',
+      searchWordStatic: '',
       showAddWordModal: false,
     }
   },
   computed: {
+    searchWord: {
+      get() {
+        return this.searchWordStatic;
+      },
+      set(value) {
+        this.searchWordStatic = value;
+      }
+    },
     words() {
       return this.$store.getters.searchWords(this.searchWord);
     }
   },
   methods: {
+    wordAdded() {
+      this.showAddWordModal = false;
+    },
     signIn() {
       auth.signInWithPopup(provider)
     },
@@ -96,5 +115,11 @@ export default {
     width: 700px;
     margin: 0 auto;
     max-width: 100%;
+  }
+  .app {
+    &_header {
+      text-align: right;
+      margin: 10px 0;
+    }
   }
 </style>

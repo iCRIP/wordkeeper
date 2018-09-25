@@ -21,6 +21,12 @@ export default new Vuex.Store({
         }
       });
       return worded;
+    },
+    getWord: (state) => (word) => {
+      const existWord = state.words.find(item => {
+        return item.name === word;
+      });
+      return existWord;
     }
   },
   mutations: {
@@ -32,14 +38,6 @@ export default new Vuex.Store({
       Vue.set(state, 'user', data);
       Vue.set(state, 'userLoaded', true);
     },
-    // searchWords(state) {
-    //   const worded = state.words.filter(item => {
-    //     if (item.name.match(this.searchWord)) {
-    //       return item;
-    //     }
-    //   });
-    //   state.words = worded;
-    // },
   },
   actions: {
     updateWords({ commit, state }) {
@@ -50,7 +48,7 @@ export default new Vuex.Store({
         const wordArray = [];
         for (var key in data.val()) {
           wordArray.push({
-            key,
+            id: key,
             ...data.val()[key]
           })
         }
@@ -66,14 +64,22 @@ export default new Vuex.Store({
       state.userLoaded = false;
       auth.signOut();
     },
-    addWord({ state }, word) {
+    addWord({ state, dispatch }, word) {
       const wordData = Object.assign({}, word);
-      const id = state.user.uid
+      const id = state.user.uid;
       const wordsRef = db.ref('users/' + id + '/words');
 
       wordsRef.push(wordData).then(() => {
-        state.commit('updateWords')
+        dispatch('updateWords')
       });
     },
+    removeWord({ state, dispatch }, word) {
+      const id = state.user.uid;
+      const wordId = word.id;
+      const wordsRef = db.ref('users/' + id + '/words/' + wordId);
+      wordsRef.remove().then(() => {
+        dispatch('updateWords')
+      });
+    }
   }
 })
