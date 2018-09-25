@@ -12,6 +12,8 @@ export default new Vuex.Store({
     isWordsLoaded: false,
     user: null,
     userLoaded: true,
+    isWordEdit: false,
+    editingWord: {}
   },
   getters: {
     searchWords: (state) => (word) => {
@@ -37,6 +39,10 @@ export default new Vuex.Store({
     setUser(state, data) {
       Vue.set(state, 'user', data);
       Vue.set(state, 'userLoaded', true);
+    },
+    editWordAction( state, word ) {
+      Vue.set(state, 'editingWord', word);
+      Vue.set(state, 'isWordEdit', true);
     },
   },
   actions: {
@@ -80,6 +86,19 @@ export default new Vuex.Store({
       wordsRef.remove().then(() => {
         dispatch('updateWords')
       });
-    }
+    },
+    
+    editWord({ state, dispatch }, word) {
+      const id = state.user.uid;
+      const wordId = word.id;
+      const wordsRef = db.ref('users/' + id + '/words/' + wordId);
+      wordsRef.set({
+        description: word.description,
+        name: word.name,
+        example: word.example,
+      }).then(() => {
+        dispatch('updateWords');
+      });
+    },
   }
 })

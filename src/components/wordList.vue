@@ -34,6 +34,16 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+  .word-list {
+    position: relative;
+    padding-top: 20px;
+    &_message {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+  }
 </style>

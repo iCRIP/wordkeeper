@@ -29,12 +29,15 @@
         @wordAdded="wordAdded">
       </add-word>
     </base-modal>
-    <!-- <base-modal
-      @closeModal="showAddWordModal = false"
-      v-if="showAddWordModal">
-      <add-word>
-      </add-word>
-    </base-modal> -->
+    <base-modal
+      @closeModal="$store.state.isWordEdit = false"
+      v-if="$store.state.isWordEdit">
+      <edit-word :word="$store.state.editingWord">
+      </edit-word>
+    </base-modal>
+    <pre>
+      {{ showEditWord }}
+    </pre>
   </div>
 </template>
 
@@ -47,6 +50,7 @@ import WordList from '@/components/wordList';
 import SignIn from '@/components/signIn';
 
 import AddWord from '@/components/addWord';
+import EditWord from '@/components/editWord';
 
 export default {
   name: 'app',
@@ -72,12 +76,18 @@ export default {
         this.searchWordStatic = value;
       }
     },
+    showEditWord () {
+      return this.$store.isWordEdit;
+    },
     words() {
       return this.$store.getters.searchWords(this.searchWord);
     }
   },
   methods: {
     wordAdded() {
+      document.getElementById('search').value = '';
+      document.getElementById('search').focus();
+      this.searchWord = '';
       this.showAddWordModal = false;
     },
     signIn() {
@@ -92,6 +102,7 @@ export default {
     WordList,
     SignIn,
     AddWord,
+    EditWord,
   },
 }
 </script>

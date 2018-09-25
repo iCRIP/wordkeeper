@@ -34,7 +34,7 @@
     &_form {
       width: 500px;
       max-width: 100%;
-      margin: 40px auto;
+      margin: 40px auto 20px;
       position: relative;
     }
     &_input {

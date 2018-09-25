@@ -18,7 +18,7 @@
         <span></span>
       </div>
       <div class="word_actions_popup">
-        <a @click="$emit('edit', word)" class="word_action">Редактировать</a>
+        <a @click="editWordHandler" class="word_action">Редактировать</a>
         <a @click="removeWord" class="word_action">Удалить</a>
       </div>
     </div>
@@ -36,6 +36,9 @@
     methods: {
       removeWord() {
         this.$store.dispatch('removeWord', this.word);
+      },
+      editWordHandler() {
+        this.$store.commit('editWordAction', this.word);
       }
     }
   }
