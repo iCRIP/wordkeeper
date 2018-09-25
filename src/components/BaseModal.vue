@@ -1,6 +1,6 @@
 <template>
   <transition name="modal">
-    <div class="modal_wrap">
+    <div class="modal_wrap" @keyup.esc="$emit('closeModal')" tabindex="0">
       <div class="modal_overlay"
         @click.prevent="$emit('closeModal')">
       </div>
@@ -34,7 +34,7 @@
     background: #fff;
     box-shadow: 0 0 20px -2px #000;
     border-radius: 3px;
-    padding: 30px 0px 25px;
+    padding: 30px 10px 25px;
     z-index: 11;
     &_wrap {
       transition: .4s;

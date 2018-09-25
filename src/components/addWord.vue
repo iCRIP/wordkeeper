@@ -1,6 +1,6 @@
 <template>
   <form class="form" @submit.prevent="addWordSubmit">
-    <div class="input">
+    <div class="input" :class="{'input--error': isWordExist}">
       <label 
         class="input_label"
         for="wordName">
@@ -117,6 +117,11 @@
     }
     textarea.input_value {
       height: 80px;
+    }
+    &--error {
+      .input_value {
+        border-color: red;
+      }
     }
   }
   .btn {

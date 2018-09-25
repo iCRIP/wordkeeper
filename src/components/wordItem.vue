@@ -12,14 +12,14 @@
       <pre class="word_example_value">{{ word.example }} </pre>
     </div>
     <div class="word_actions">
-      <div class="word_actions_btn" tabindex="-1">
+      <button class="word_actions_btn">
         <span></span>
         <span></span>
         <span></span>
-      </div>
+      </button>
       <div class="word_actions_popup">
-        <a @click="editWordHandler" class="word_action">Редактировать</a>
-        <a @click="removeWord" class="word_action">Удалить</a>
+        <a href="#" @click.prevent="editWordHandler" class="word_action">Редактировать</a>
+        <a href="#" @click.prevent="removeWord" class="word_action">Удалить</a>
       </div>
     </div>
   </div>
@@ -47,21 +47,19 @@
 <style scoped lang="scss">
 $color: #ccc;
   .word {
-    display: flex;
-    justify-content: space-between;
     border-bottom: 1px solid $color;
     padding: 15px 30px 15px 0px;
-    display: flex;
     position: relative;
     &:first-child {
       border-top: 1px solid $color;
     }
     &_action {
       display: block;
-      
       cursor: default;
       padding: 5px 10px;
-      &:hover {
+      text-decoration: none;
+      color: inherit;
+      &:hover,&:focus {
         background: $color;
       }
       &s {
@@ -85,6 +83,8 @@ $color: #ccc;
           width: 30px;
           height: 30px;
           text-align: center;
+          background-color: transparent;
+          border: none;
           span {
             display: block;
             margin: 4px auto;
@@ -97,9 +97,18 @@ $color: #ccc;
               margin-top: 4px;
             }
           }
-          
+          &:focus {
+            span {
+              background: #1c1c1c;
+            }
+            &+.word_actions_popup {
+              opacity: 1;
+              pointer-events: all;
+              z-index: 2;
+            }
+          }
         }
-        &:hover {
+        &:hover, &:focus-within {
           .word_actions_btn {
             span {
               background: #1c1c1c;
@@ -113,19 +122,40 @@ $color: #ccc;
         }
       }
     }
-    &_name, &_description, &_example {
-      flex: 1
-    }
-    &_name, &_description {
+    &_name {
       padding: 10px 10px;
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+    &_description {
+      padding-left: 15px;
+      padding-bottom: 10px;
     }
     &_example {
       &_value {
+        text-overflow: clip;
+        overflow: auto;
         background-color: #eee;
         margin: 0;
         padding: 10px 10px;
         border-radius: 5px;
       }
+    }
+    &--no-description {
+      .word_description {
+        display: none;
+      }
+    }
+    &--no-example {
+      .word_example {
+        display: none;
+      }
+    }
+  }
+  @media (min-width: 700px) {
+    .word {
+      // display: flex;
+      // justify-content: space-between;
     }
   }
 </style>

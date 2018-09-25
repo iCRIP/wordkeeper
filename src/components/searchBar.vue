@@ -14,7 +14,7 @@
         class="search_label">
         Слово
       </label>
-      <button class="search_button"
+      <button class="search_button" tabindex="-1"
         type="submit"></button>
     </form>
   </div>
@@ -36,6 +36,15 @@
       max-width: 100%;
       margin: 40px auto 20px;
       position: relative;
+      &:focus-within {
+        .search_input {
+          box-shadow: 0 0 10px -1px #000;
+          outline: none;
+        }
+        .search_label {
+          opacity: 0;
+        }
+      }
     }
     &_input {
       width: 100%;
@@ -63,8 +72,11 @@
       height: 46px;
       background-color: transparent;
       border: none;
-      &:focus {
+      border-radius: 50px;
+      transition: .4s;
+      &:focus, &:hover {
         outline: none;
+        box-shadow: 0 0 15px -1px #000;
       }
       &:before, &:after {
         content: '';
@@ -72,19 +84,18 @@
         display: block;
       }
       &:before {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        border: 2px solid #ccc;
-        top: 11px;
-        left: 11px;
+        width: 4px;
+        height: 27px;
+        background: #ccc;
+        top: 10px;
+        left: 21px;
       }
       &:after {
-        width: 4px;
-        border: 1px solid #ccc;
-        top: 32px;
-        transform: rotate(45deg);
-        left: 30px;
+        background-color: #ccc;
+        height: 4px;
+        width: 28px;
+        top: 22px;
+        left: 9px;
       }
     }
     &_label {

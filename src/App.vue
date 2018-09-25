@@ -85,8 +85,10 @@ export default {
   },
   methods: {
     wordAdded() {
-      document.getElementById('search').value = '';
-      document.getElementById('search').focus();
+      const searchInput = document.getElementById('search');
+      
+      searchInput.value = '';
+      searchInput.focus();
       this.searchWord = '';
       this.showAddWordModal = false;
     },
@@ -125,6 +127,7 @@ export default {
   .container {
     width: 700px;
     margin: 0 auto;
+    padding: 0 10px;
     max-width: 100%;
   }
   .app {
