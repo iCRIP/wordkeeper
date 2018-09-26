@@ -17,8 +17,9 @@ export default new Vuex.Store({
   },
   getters: {
     searchWords: (state) => (word) => {
+      const lowerCase = word.toLowerCase();
       const worded = state.words.filter(item => {
-        if (item.name.match(word)) {
+        if (item.name.match(lowerCase)) {
           return item;
         }
       });
@@ -26,7 +27,7 @@ export default new Vuex.Store({
     },
     getWord: (state) => (word) => {
       const existWord = state.words.find(item => {
-        return item.name === word;
+        return item.name === word.toLowerCase();
       });
       return existWord;
     }

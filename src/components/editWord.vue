@@ -1,6 +1,6 @@
 <template>
   <form class="form" @submit.prevent="editWordSubmit">
-    <div class="input">
+    <div class="input" :class="{'input--error': isWordExist}">
       <label 
         class="input_label"
         for="wordName">
@@ -71,6 +71,7 @@
     methods: {
       editWordSubmit() {
         if ( !this.isWordExist ) {
+          this.editWord.name = this.editWord.name.toLowerCase();
           this.$store.dispatch('editWord', this.editWord)
           .then(() => {
             this.$store.state.isWordEdit = false;

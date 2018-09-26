@@ -69,6 +69,7 @@
     methods: {
       addWordSubmit() {
         if ( !this.isWordExist ) {
+          this.word.name = this.word.name.toLowerCase();
           this.$store.dispatch('addWord', this.word)
           .then(() => {
             this.$emit('wordAdded');
