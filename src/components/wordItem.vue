@@ -9,7 +9,7 @@
     </div>
     <div class="word_description">{{ word.description }}</div>
     <div class="word_example">
-      <pre class="word_example_value">{{ word.example }} </pre>
+      <div class="word_example_value">{{ word.example }} </div>
     </div>
     <div class="word_actions">
       <button class="word_actions_btn">

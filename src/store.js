@@ -59,6 +59,7 @@ export default new Vuex.Store({
             ...data.val()[key]
           })
         }
+        wordArray.reverse();
         commit('setWords', wordArray);
       })
     },
