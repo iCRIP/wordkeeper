@@ -14,6 +14,7 @@
         @searchSubmit="showAddWordModal = true">
       </search-bar>
       <word-list
+        :search="searchWord"
         :loaded="$store.state.isWordsLoaded"
         :words="words" ></word-list>
     </div>

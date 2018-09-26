@@ -1,10 +1,13 @@
 <template>
   <div class="word-list">
-    <div class="word-list_message" v-if="!words.length && loaded">
-      Ваш словарь пуст
+    <div class="word-list_message" v-if="!words.length && loaded && !search">
+      Ваш словарь пуст.
+    </div>
+    <div class="word-list_message" v-if="!words.length && loaded && search">
+      Слов не найдено.
     </div>
     <div class="word-list_message" v-if="!loaded">
-      Загрузка
+      Загрузка...
     </div>
     <word-item
       v-if="words.length"
@@ -23,6 +26,10 @@
       loaded: {
         type: Boolean,
         default: false
+      },
+      search: {
+        type: String,
+        default: ''
       },
       words: {
         type: Array,
