@@ -10,13 +10,13 @@
         </button>
       </header>
       <search-bar
-        v-model="searchWord"
+        @input="searchHandler"
         @searchSubmit="showAddWordModal = true">
       </search-bar>
       <word-list
-        :search="searchWord"
+        :search="searchWordStatic"
         :loaded="$store.state.isWordsLoaded"
-        :words="words" ></word-list>
+        :words="$store.state.words" ></word-list>
     </div>
     <div class="container"
       v-if="$store.state.user === null &&
@@ -26,7 +26,7 @@
     <base-modal
       @closeModal="showAddWordModal = false"
       v-if="showAddWordModal">
-      <add-word :wordName="searchWord"
+      <add-word :wordName="searchWordStatic"
         @wordAdded="wordAdded">
       </add-word>
     </base-modal>
@@ -69,28 +69,22 @@ export default {
     }
   },
   computed: {
-    searchWord: {
-      get() {
-        return this.searchWordStatic;
-      },
-      set(value) {
-        this.searchWordStatic = value;
-      }
-    },
     showEditWord () {
       return this.$store.isWordEdit;
     },
-    words() {
-      return this.$store.getters.searchWords(this.searchWord);
-    }
   },
   methods: {
+    searchHandler(val) {
+      this.searchWordStatic = val;
+      this.$store.commit('searchWord', val)
+      this.$store.dispatch('updateWords')
+    },
     wordAdded() {
       const searchInput = document.getElementById('search');
       
       searchInput.value = '';
       searchInput.focus();
-      this.searchWord = '';
+      this.searchWordStatic = '';
       this.showAddWordModal = false;
     },
     signIn() {

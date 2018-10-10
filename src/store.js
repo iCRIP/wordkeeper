@@ -15,7 +15,8 @@ export default new Vuex.Store({
     isWordEdit: false,
     editingWord: {},
     pageCount: 2,
-    wordsOnPage: 6
+    wordsOnPage: 6,
+    searchword: ''
   },
   getters: {
     searchWords: (state) => (word) => {
@@ -35,6 +36,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    searchWord(state, val) {
+      Vue.set(state, 'searchword', val)
+    },
     setWords(state, data) {
       Vue.set(state, 'words', data);
       Vue.set(state, 'isWordsLoaded', true);
@@ -64,11 +68,24 @@ export default new Vuex.Store({
       wordArray.reverse();
       return wordArray;
     },
+    getWord({ state }, word) {
+      const id = state.user.uid;
+      db.ref('users/' + id + '/words')
+      .orderByChild('name')
+      .equalTo(word)
+      .once('value')
+      .then((snapshot) => {
+        return snapshot.val();
+      })
+    },
     updateWords({ dispatch, commit, state }) {
       const id = state.user.uid;
       state.isWordsLoaded = false;
       db.ref('users/' + id + '/words')
-        .limitToLast(state.wordsOnPage * state.pageCount)
+        .orderByChild('name')
+        .startAt(state.searchword)
+        .endAt(state.searchword+'\uf8ff')
+        .limitToFirst(state.wordsOnPage * state.pageCount)
         .on('value', (snapshot) => {
           const data = snapshot.val();
           dispatch('transformWords', data).then(res => {
