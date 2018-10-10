@@ -38,6 +38,34 @@
     components: {
       WordItem
     },
+    methods: {
+      handleScroll: function () {
+        function getScrollTop(){
+          if(typeof pageYOffset!= 'undefined'){
+            //most browsers except IE before #9
+            return pageYOffset;
+          }
+          else{
+            const B= document.body; //IE 'quirks'
+            const D= document.documentElement; //IE with doctype
+            D= (D.clientHeight)? D: B;
+            return D.scrollTop;
+          }
+        };
+        const bodyHeight = document.body.clientHeight;
+        const windowHeight = window.innerHeight;
+        if ((bodyHeight - getScrollTop()) - windowHeight < 0) {
+          this.$store.dispatch('loadMoreWords')
+        }
+      }
+    },
+
+    created: function () {
+      window.addEventListener('scroll', this.handleScroll);
+    },
+    destroyed: function () {
+      window.removeEventListener('scroll', this.handleScroll);
+    }
   }
 </script>
 

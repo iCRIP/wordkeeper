@@ -94,7 +94,7 @@ export default {
       this.showAddWordModal = false;
     },
     signIn() {
-      auth.signInWithPopup(provider)
+      auth.signInWithRedirect(provider)
     },
     signOut() {
       this.$store.dispatch('signOutStore')

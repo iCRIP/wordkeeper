@@ -13,7 +13,9 @@ export default new Vuex.Store({
     user: null,
     userLoaded: true,
     isWordEdit: false,
-    editingWord: {}
+    editingWord: {},
+    pageCount: 2,
+    wordsOnPage: 6
   },
   getters: {
     searchWords: (state) => (word) => {
@@ -37,31 +39,49 @@ export default new Vuex.Store({
       Vue.set(state, 'words', data);
       Vue.set(state, 'isWordsLoaded', true);
     },
+    addWords(state, data) {
+      state.words.push(...data);
+    },
     setUser(state, data) {
       Vue.set(state, 'user', data);
       Vue.set(state, 'userLoaded', true);
     },
     editWordAction( state, word ) {
-      Vue.set(state, 'editingWord', word);
+      Vue.set(state, 'editingWord', word); 
       Vue.set(state, 'isWordEdit', true);
     },
+    
   },
   actions: {
-    updateWords({ commit, state }) {
+    transformWords({ commit }, snapshotData) {
+      const wordArray = [];
+      for (var key in snapshotData) {
+        wordArray.push({
+          id: key,
+          ...snapshotData[key]
+        })
+      }
+      wordArray.reverse();
+      return wordArray;
+    },
+    updateWords({ dispatch, commit, state }) {
       const id = state.user.uid;
       state.isWordsLoaded = false;
-      db.ref('users/' + id + '/words').once('value')
-      .then((data) => {
-        const wordArray = [];
-        for (var key in data.val()) {
-          wordArray.push({
-            id: key,
-            ...data.val()[key]
-          })
-        }
-        wordArray.reverse();
-        commit('setWords', wordArray);
+      db.ref('users/' + id + '/words')
+        .limitToLast(state.wordsOnPage * state.pageCount)
+        .on('value', (snapshot) => {
+          const data = snapshot.val();
+          dispatch('transformWords', data).then(res => {
+            commit('setWords', res);
+          });
       })
+    },
+    loadMoreWords({ dispatch, state }) {
+      const limit = state.wordsOnPage * state.pageCount;
+      if(state.words.length >= limit) {
+        state.pageCount++;
+        dispatch('updateWords');
+      }
     },
     signInStore({ commit, dispatch }, user) {
       commit('setUser', user)
@@ -72,25 +92,20 @@ export default new Vuex.Store({
       state.userLoaded = false;
       auth.signOut();
     },
-    addWord({ state, dispatch }, word) {
+    addWord({ state }, word) {
       const wordData = Object.assign({}, word);
       const id = state.user.uid;
       const wordsRef = db.ref('users/' + id + '/words');
 
-      wordsRef.push(wordData).then(() => {
-        dispatch('updateWords')
-      });
+      wordsRef.push(wordData);
     },
-    removeWord({ state, dispatch }, word) {
+    removeWord({ state }, word) {
       const id = state.user.uid;
       const wordId = word.id;
       const wordsRef = db.ref('users/' + id + '/words/' + wordId);
-      wordsRef.remove().then(() => {
-        dispatch('updateWords')
-      });
+      wordsRef.remove()
     },
-    
-    editWord({ state, dispatch }, word) {
+    editWord({ state }, word) {
       const id = state.user.uid;
       const wordId = word.id;
       const wordsRef = db.ref('users/' + id + '/words/' + wordId);
@@ -98,9 +113,7 @@ export default new Vuex.Store({
         description: word.description,
         name: word.name,
         example: word.example,
-      }).then(() => {
-        dispatch('updateWords');
-      });
+      })
     },
   }
 })

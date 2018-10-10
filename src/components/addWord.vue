@@ -85,6 +85,7 @@
 
 <style lang="scss">
   .form {
+    margin: 0 auto;
     width: 300px;
     max-width: 100%;
     &_footer {
@@ -104,7 +105,7 @@
     &_value {
       border: 1px solid #ccc;
       border-radius: 3px;
-      min-height: 30px;
+      min-height: 40px;
       font-size: 16px;
       padding: 5px 5px;
       font-family: Arial;
@@ -130,7 +131,7 @@
     border-radius: 100px;
     background-color: transparent;
     font-size: 16px;
-    padding: 5px 15px;
+    padding: 10px 25px;
     font-weight: bold;
     color: #1c1c1c;
     transition: box-shadow .4s;

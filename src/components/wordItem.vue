@@ -11,8 +11,8 @@
     <div class="word_example">
       <div class="word_example_value">{{ word.example }} </div>
     </div>
-    <div class="word_actions">
-      <button class="word_actions_btn">
+    <div class="word_actions" :class="{'focused': focused}">
+      <button @focus="focused = !focused" @blur="focused = false" class="word_actions_btn">
         <span></span>
         <span></span>
         <span></span>
@@ -27,6 +27,11 @@
 
 <script>
   export default {
+    data() {
+      return {
+        focused: false,
+      }
+    },
     props: {
       word: {
         type: Object,
@@ -36,9 +41,11 @@
     methods: {
       removeWord() {
         this.$store.dispatch('removeWord', this.word);
+        this.focused = false;
       },
       editWordHandler() {
         this.$store.commit('editWordAction', this.word);
+        this.focused = false;
       }
     }
   }
@@ -97,18 +104,8 @@ $color: #ccc;
               margin-top: 4px;
             }
           }
-          &:focus {
-            span {
-              background: #1c1c1c;
-            }
-            &+.word_actions_popup {
-              opacity: 1;
-              pointer-events: all;
-              z-index: 2;
-            }
-          }
         }
-        &:hover, &:focus-within {
+        &:hover, &.focused {
           .word_actions_btn {
             span {
               background: #1c1c1c;
@@ -135,7 +132,7 @@ $color: #ccc;
       &_value {
         text-overflow: clip;
         overflow: auto;
-        background-color: #eee;
+        background-color: #e0dede;
         margin: 0;
         padding: 10px 10px;
         border-radius: 5px;
