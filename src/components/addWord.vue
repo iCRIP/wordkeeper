@@ -1,6 +1,6 @@
 <template>
   <form class="form" @submit.prevent="addWordSubmit">
-    <div class="input" :class="{'input--error': isWordExist}">
+    <div class="input" :class="{'input--error': wordExist}">
       <label 
         class="input_label"
         for="wordName">
@@ -10,6 +10,7 @@
         autofocus="true"
         required="true"
         class="input_value"
+        @input="isWordExist"
         v-model="word.name"
         type="text">
     </div>
@@ -36,11 +37,11 @@
         type="text"></textarea>
     </div>
     <div class="form_message"
-      v-show="isWordExist">
+      v-show="wordExist">
       Это слово существует
     </div>
     <div class="form_footer">
-      <button :disabled="isWordExist" class="btn" type="submit">Добавить</button>
+      <button :disabled="wordExist" class="btn" type="submit">Добавить</button>
     </div>
   </form>
 </template>
@@ -55,18 +56,29 @@
           description: '',
           example: '',
         },
+        wordExist: false,
       }
     },
     props: ['wordName'],
     computed: {
-      isWordExist() {
-        if ( this.$store.getters.getWord(this.word.name) ) {
-          return true;
-        }
-        return false;
-      }
+      // isWordExist() {
+      //   if ( this.$store.getters.getWord(this.word.name) ) {
+      //     return true;
+      //   }
+      //   return false;
+      // }
     },
     methods: {
+      isWordExist(event) {
+        this.$store.getters.getWord(event.target.value)
+        .then(res => {
+          if(res) {
+            this.wordExist = true;
+          } else {
+            this.wordExist = false;
+          }
+        })
+      },
       addWordSubmit() {
         if ( !this.isWordExist ) {
           this.word.name = this.word.name.toLowerCase();

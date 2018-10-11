@@ -1,6 +1,6 @@
 <template>
   <form class="form" @submit.prevent="editWordSubmit">
-    <div class="input" :class="{'input--error': isWordExist}">
+    <div class="input" :class="{'input--error': wordExist}">
       <label 
         class="input_label"
         for="wordName">
@@ -10,6 +10,7 @@
         autofocus="true"
         required="true"
         class="input_value"
+        @input="isWordExist"
         v-model="editWord.name"
         type="text">
     </div>
@@ -36,11 +37,11 @@
         type="text"></textarea>
     </div>
     <div class="form_message"
-      v-show="isWordExist">
+      v-show="wordExist">
       Это слово существует
     </div>
     <div class="form_footer">
-      <button :disabled="isWordExist" class="btn" type="submit">Добавить</button>
+      <button :disabled="wordExist" class="btn" type="submit">Редактировать</button>
     </div>
   </form>
 </template>
@@ -52,25 +53,31 @@
     data() {
       return {
         editWord: Object.assign({}, this.word),
+        wordExist: false,
       }
     },
     computed: {
-      
       oldWord() {
         return Object.assign({}, this.word);
       },
-      isWordExist() {
-        const foundWord = this.$store.getters.getWord(this.editWord.name);
-
-        if ( foundWord && foundWord.name !== this.oldWord.name) {
-          return true;
-        }
-        return false;
-      }
     },
     methods: {
+      isWordExist(event) {
+        this.$store.getters.getWord(event.target.value)
+        .then(res => {
+          if(res) {
+            if(res[this.oldWord.id]) {
+              this.wordExist = false;
+            } else {
+              this.wordExist = true;
+            }
+          } else {
+            this.wordExist = false;
+          }
+        })
+      },
       editWordSubmit() {
-        if ( !this.isWordExist ) {
+        if ( !this.wordExist ) {
           this.editWord.name = this.editWord.name.toLowerCase();
           this.$store.dispatch('editWord', this.editWord)
           .then(() => {

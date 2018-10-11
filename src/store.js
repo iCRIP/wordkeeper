@@ -29,10 +29,18 @@ export default new Vuex.Store({
       return worded;
     },
     getWord: (state) => (word) => {
-      const existWord = state.words.find(item => {
-        return item.name === word.toLowerCase();
-      });
-      return existWord;
+      return db.ref('users/' + state.user.uid + '/words')
+        .orderByChild('name')
+        .equalTo(word.toLowerCase())
+        .once('value')
+        .then((snapshot) => {
+          return Promise.resolve(snapshot.val())
+        })
+        
+      // const existWord = state.words.find(item => {
+      //   return item.name === word.toLowerCase();
+      // });
+      // return existWord;
     }
   },
   mutations: {
