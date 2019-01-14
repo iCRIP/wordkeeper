@@ -9,12 +9,13 @@
     <div class="word-list_message" v-if="!loaded">
       Загрузка...
     </div>
-    <word-item
-      v-if="words.length"
-      v-for="(word, uid) in words"
-      :word="word"
-      :key="uid"
-      ></word-item>
+    <template v-if="words.length">
+      <word-item
+        v-for="(word, uid) in words"
+        :word="word"
+        :key="uid"
+        ></word-item>
+    </template>
   </div>
 </template>
 
@@ -46,12 +47,12 @@
             return pageYOffset;
           }
           else{
-            const B= document.body; //IE 'quirks'
-            const D= document.documentElement; //IE with doctype
-            D= (D.clientHeight)? D: B;
+            const B = document.body; //IE 'quirks'
+            let D = document.documentElement; //IE with doctype
+            D = (D.clientHeight)? D: B;
             return D.scrollTop;
           }
-        };
+        }
         const bodyHeight = document.body.clientHeight;
         const windowHeight = window.innerHeight;
         if ((bodyHeight - getScrollTop()) - windowHeight < 0) {
@@ -63,6 +64,7 @@
     created: function () {
       window.addEventListener('scroll', this.handleScroll);
     },
+    
     destroyed: function () {
       window.removeEventListener('scroll', this.handleScroll);
     }

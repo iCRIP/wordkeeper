@@ -27,22 +27,25 @@
 
 <script>
   export default {
-    data() {
-      return {
-        focused: false,
-      }
-    },
     props: {
       word: {
         type: Object,
         required: true,
       }
     },
+    
+    data() {
+      return {
+        focused: false,
+      }
+    },
+
     methods: {
       removeWord() {
         this.$store.dispatch('removeWord', this.word);
         this.focused = false;
       },
+      
       editWordHandler() {
         this.$store.commit('editWordAction', this.word);
         this.focused = false;

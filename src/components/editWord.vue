@@ -50,17 +50,20 @@
 
   export default {
     props: ['word'],
+    
     data() {
       return {
         editWord: Object.assign({}, this.word),
         wordExist: false,
       }
     },
+
     computed: {
       oldWord() {
         return Object.assign({}, this.word);
       },
     },
+
     methods: {
       isWordExist(event) {
         this.$store.getters.getWord(event.target.value)
@@ -76,6 +79,7 @@
           }
         })
       },
+
       editWordSubmit() {
         if ( !this.wordExist ) {
           this.editWord.name = this.editWord.name.toLowerCase();
@@ -85,8 +89,10 @@
             this.$emit('wordEdited', this.editWord);
           })
         }
-      }
+      },
+
     },
+    
     mounted() {
       this.$el[0].focus()
     }

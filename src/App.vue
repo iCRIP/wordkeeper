@@ -33,7 +33,8 @@
     <base-modal
       @closeModal="$store.state.isWordEdit = false"
       v-if="$store.state.isWordEdit">
-      <edit-word :word="$store.state.editingWord">
+      <edit-word :word="$store.state.editingWord"
+        @wordEdited="wordAdded">
       </edit-word>
     </base-modal>
     <pre>
@@ -75,9 +76,10 @@ export default {
   },
   methods: {
     searchHandler(val) {
+      
       this.searchWordStatic = val;
-      this.$store.commit('searchWord', val)
-      this.$store.dispatch('updateWords')
+      this.$store.commit('searchWord', val.toLowerCase())
+      this.$store.dispatch('searchWords')
     },
     wordAdded() {
       const searchInput = document.getElementById('search');
@@ -86,6 +88,7 @@ export default {
       searchInput.focus();
       this.searchWordStatic = '';
       this.showAddWordModal = false;
+      this.$store.dispatch('updateWords')
     },
     signIn() {
       auth.signInWithRedirect(provider)

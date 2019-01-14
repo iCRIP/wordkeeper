@@ -36,11 +36,6 @@ export default new Vuex.Store({
         .then((snapshot) => {
           return Promise.resolve(snapshot.val())
         })
-        
-      // const existWord = state.words.find(item => {
-      //   return item.name === word.toLowerCase();
-      // });
-      // return existWord;
     }
   },
   mutations: {
@@ -65,6 +60,7 @@ export default new Vuex.Store({
     
   },
   actions: {
+    // eslint-disable-next-line
     transformWords({ commit }, snapshotData) {
       const wordArray = [];
       for (var key in snapshotData) {
@@ -80,20 +76,31 @@ export default new Vuex.Store({
       const id = state.user.uid;
       db.ref('users/' + id + '/words')
       .orderByChild('name')
-      .equalTo(word)
+      .equalTo(word.toLowerCase())
       .once('value')
       .then((snapshot) => {
         return snapshot.val();
       })
     },
-    updateWords({ dispatch, commit, state }) {
+    searchWords({ dispatch, commit, state }) {
       const id = state.user.uid;
       state.isWordsLoaded = false;
       db.ref('users/' + id + '/words')
         .orderByChild('name')
         .startAt(state.searchword)
         .endAt(state.searchword+'\uf8ff')
-        .limitToFirst(state.wordsOnPage * state.pageCount)
+        .on('value', (snapshot) => {
+          const data = snapshot.val();
+          dispatch('transformWords', data).then(res => {
+            commit('setWords', res);
+          });
+      })
+    },
+    updateWords({ dispatch, commit, state }) {
+      const id = state.user.uid;
+      state.isWordsLoaded = false;
+      db.ref('users/' + id + '/words')
+        .limitToLast(state.wordsOnPage * state.pageCount)
         .on('value', (snapshot) => {
           const data = snapshot.val();
           dispatch('transformWords', data).then(res => {
@@ -106,6 +113,8 @@ export default new Vuex.Store({
       if(state.words.length >= limit) {
         state.pageCount++;
         dispatch('updateWords');
+      } else if ( state.searchword.length ) {
+        dispatch('searchWords');
       }
     },
     signInStore({ commit, dispatch }, user) {

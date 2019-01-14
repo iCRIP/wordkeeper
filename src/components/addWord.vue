@@ -49,6 +49,8 @@
 <script>
 
   export default {
+    props: ['wordName'],
+
     data() {
       return {
         word: {
@@ -59,15 +61,7 @@
         wordExist: false,
       }
     },
-    props: ['wordName'],
-    computed: {
-      // isWordExist() {
-      //   if ( this.$store.getters.getWord(this.word.name) ) {
-      //     return true;
-      //   }
-      //   return false;
-      // }
-    },
+
     methods: {
       isWordExist(event) {
         this.$store.getters.getWord(event.target.value)
@@ -79,8 +73,9 @@
           }
         })
       },
+      
       addWordSubmit() {
-        if ( !this.isWordExist ) {
+        if ( !this.wordExist ) {
           this.word.name = this.word.name.toLowerCase();
           this.$store.dispatch('addWord', this.word)
           .then(() => {
@@ -89,6 +84,7 @@
         }
       }
     },
+
     mounted() {
       this.$el[0].focus()
     }
